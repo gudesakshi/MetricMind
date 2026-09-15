@@ -1,0 +1,24 @@
+{
+  "metrics": {
+    "revenue": "SUM(revenue)",
+    "cost": "SUM(cost)",
+    "profit": "SUM(revenue) - SUM(cost)",
+    "profit_margin": "(SUM(revenue) - SUM(cost)) / NULLIF(SUM(revenue), 0)",
+    "orders": "COUNT(DISTINCT order_id)",
+    "quantity": "SUM(quantity)"
+  },
+  "dimensions": [
+    "order_date",
+    "country",
+    "region",
+    "product",
+    "category",
+    "month"
+  ],
+  "rules": [
+    "Profit must always be Revenue minus Cost.",
+    "Profit Margin must be Profit divided by Revenue.",
+    "Never invent a metric definition.",
+    "Only use approved metrics and dimensions."
+  ]
+}
