@@ -1,0 +1,770 @@
+{
+  "metadata": {
+    "kernelspec": {
+      "name": "python",
+      "display_name": "Python (Pyodide)",
+      "language": "python"
+    },
+    "language_info": {
+      "codemirror_mode": {
+        "name": "python",
+        "version": 3
+      },
+      "file_extension": ".py",
+      "mimetype": "text/x-python",
+      "name": "python",
+      "nbconvert_exporter": "python",
+      "pygments_lexer": "ipython3",
+      "version": "3.8"
+    }
+  },
+  "nbformat_minor": 5,
+  "nbformat": 4,
+  "cells": [
+    {
+      "id": "cc16050c-cb11-4ea0-a604-53b2b8ac8b2a",
+      "cell_type": "code",
+      "source": "import pandas as pd\ndf = pd.read_csv('metricmind.csv')\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": 1
+    },
+    {
+      "id": "991f5f2a-1f7c-4e94-8224-7e11963776b6",
+      "cell_type": "code",
+      "source": "df.info()",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": "<class 'pandas.DataFrame'>\nRangeIndex: 5000 entries, 0 to 4999\nData columns (total 11 columns):\n #   Column      Non-Null Count  Dtype  \n---  ------      --------------  -----  \n 0   Order_ID    5000 non-null   int64  \n 1   Order_Date  5000 non-null   str    \n 2   Country     5000 non-null   str    \n 3   Region      5000 non-null   str    \n 4   Product     5000 non-null   str    \n 5   Category    5000 non-null   str    \n 6   Quantity    5000 non-null   int64  \n 7   Unit_Price  5000 non-null   float64\n 8   Unit_Cost   5000 non-null   float64\n 9   Revenue     5000 non-null   float64\n 10  Cost        5000 non-null   float64\ndtypes: float64(4), int64(2), str(5)\nmemory usage: 332.1 KB\n"
+        }
+      ],
+      "execution_count": 2
+    },
+    {
+      "id": "9b99046f-cc36-44cf-8b3c-faf65c4cb4b8",
+      "cell_type": "code",
+      "source": "df.isnull().sum()",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 5,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "Order_ID      0\nOrder_Date    0\nCountry       0\nRegion        0\nProduct       0\nCategory      0\nQuantity      0\nUnit_Price    0\nUnit_Cost     0\nRevenue       0\nCost          0\ndtype: int64"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 5
+    },
+    {
+      "id": "26d2b39e-e93f-420f-9d6d-555fe714c0bf",
+      "cell_type": "code",
+      "source": "df.columns=df.columns.str.title()",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": 3
+    },
+    {
+      "id": "8b95845b-6784-4f35-bbc5-f08a69b769d2",
+      "cell_type": "code",
+      "source": "df",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 4,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "      Order_Id  Order_Date      Country               Region     Product  \\\n0       102707  2025-01-01      Germany               Europe     Monitor   \n1       104038  2025-01-01       Mexico        North America     Monitor   \n2       103153  2025-01-01          USA        North America      Tablet   \n3       103617  2025-01-01  South Korea                 Asia  Smartwatch   \n4       102562  2025-01-01       Mexico        North America  Smartwatch   \n...        ...         ...          ...                  ...         ...   \n4995    102879  2026-06-30  South Korea                 Asia  Smartwatch   \n4996    104162  2026-06-30           UK               Europe     Monitor   \n4997    100980  2026-06-30    Singapore                 Asia  Headphones   \n4998    101426  2026-06-30  New Zealand  Australia & Oceania  Smartwatch   \n4999    100530  2026-06-30    Australia  Australia & Oceania      Tablet   \n\n         Category  Quantity  Unit_Price  Unit_Cost  Revenue     Cost  \n0     Electronics        14      322.82     234.87  4519.48  3288.18  \n1     Electronics        14      358.28     230.71  5015.92  3229.94  \n2     Electronics        15      405.59     290.24  6083.85  4353.60  \n3       Wearables        11      223.53     127.81  2458.83  1405.91  \n4       Wearables         3      201.58     139.86   604.74   419.58  \n...           ...       ...         ...        ...      ...      ...  \n4995    Wearables         9      222.99     138.48  2006.91  1246.32  \n4996  Electronics         9      353.98     240.49  3185.82  2164.41  \n4997  Accessories         1      109.94      66.30   109.94    66.30  \n4998    Wearables        14      204.15     132.73  2858.10  1858.22  \n4999  Electronics         8      461.86     304.26  3694.88  2434.08  \n\n[5000 rows x 11 columns]",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Order_Id</th>\n      <th>Order_Date</th>\n      <th>Country</th>\n      <th>Region</th>\n      <th>Product</th>\n      <th>Category</th>\n      <th>Quantity</th>\n      <th>Unit_Price</th>\n      <th>Unit_Cost</th>\n      <th>Revenue</th>\n      <th>Cost</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>102707</td>\n      <td>2025-01-01</td>\n      <td>Germany</td>\n      <td>Europe</td>\n      <td>Monitor</td>\n      <td>Electronics</td>\n      <td>14</td>\n      <td>322.82</td>\n      <td>234.87</td>\n      <td>4519.48</td>\n      <td>3288.18</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>104038</td>\n      <td>2025-01-01</td>\n      <td>Mexico</td>\n      <td>North America</td>\n      <td>Monitor</td>\n      <td>Electronics</td>\n      <td>14</td>\n      <td>358.28</td>\n      <td>230.71</td>\n      <td>5015.92</td>\n      <td>3229.94</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>103153</td>\n      <td>2025-01-01</td>\n      <td>USA</td>\n      <td>North America</td>\n      <td>Tablet</td>\n      <td>Electronics</td>\n      <td>15</td>\n      <td>405.59</td>\n      <td>290.24</td>\n      <td>6083.85</td>\n      <td>4353.60</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>103617</td>\n      <td>2025-01-01</td>\n      <td>South Korea</td>\n      <td>Asia</td>\n      <td>Smartwatch</td>\n      <td>Wearables</td>\n      <td>11</td>\n      <td>223.53</td>\n      <td>127.81</td>\n      <td>2458.83</td>\n      <td>1405.91</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>102562</td>\n      <td>2025-01-01</td>\n      <td>Mexico</td>\n      <td>North America</td>\n      <td>Smartwatch</td>\n      <td>Wearables</td>\n      <td>3</td>\n      <td>201.58</td>\n      <td>139.86</td>\n      <td>604.74</td>\n      <td>419.58</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>4995</th>\n      <td>102879</td>\n      <td>2026-06-30</td>\n      <td>South Korea</td>\n      <td>Asia</td>\n      <td>Smartwatch</td>\n      <td>Wearables</td>\n      <td>9</td>\n      <td>222.99</td>\n      <td>138.48</td>\n      <td>2006.91</td>\n      <td>1246.32</td>\n    </tr>\n    <tr>\n      <th>4996</th>\n      <td>104162</td>\n      <td>2026-06-30</td>\n      <td>UK</td>\n      <td>Europe</td>\n      <td>Monitor</td>\n      <td>Electronics</td>\n      <td>9</td>\n      <td>353.98</td>\n      <td>240.49</td>\n      <td>3185.82</td>\n      <td>2164.41</td>\n    </tr>\n    <tr>\n      <th>4997</th>\n      <td>100980</td>\n      <td>2026-06-30</td>\n      <td>Singapore</td>\n      <td>Asia</td>\n      <td>Headphones</td>\n      <td>Accessories</td>\n      <td>1</td>\n      <td>109.94</td>\n      <td>66.30</td>\n      <td>109.94</td>\n      <td>66.30</td>\n    </tr>\n    <tr>\n      <th>4998</th>\n      <td>101426</td>\n      <td>2026-06-30</td>\n      <td>New Zealand</td>\n      <td>Australia &amp; Oceania</td>\n      <td>Smartwatch</td>\n      <td>Wearables</td>\n      <td>14</td>\n      <td>204.15</td>\n      <td>132.73</td>\n      <td>2858.10</td>\n      <td>1858.22</td>\n    </tr>\n    <tr>\n      <th>4999</th>\n      <td>100530</td>\n      <td>2026-06-30</td>\n      <td>Australia</td>\n      <td>Australia &amp; Oceania</td>\n      <td>Tablet</td>\n      <td>Electronics</td>\n      <td>8</td>\n      <td>461.86</td>\n      <td>304.26</td>\n      <td>3694.88</td>\n      <td>2434.08</td>\n    </tr>\n  </tbody>\n</table>\n<p>5000 rows × 11 columns</p>\n</div>"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 4
+    },
+    {
+      "id": "7eadb40b-6de3-40fc-94c7-00ad88010aa5",
+      "cell_type": "code",
+      "source": "df = df.rename(columns={'Cost':'Total_Cost'})",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": 21
+    },
+    {
+      "id": "361ff0d0-ebf4-4295-b781-1c812f9624e1",
+      "cell_type": "code",
+      "source": "df.columns\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 5,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "Index(['Order_Id', 'Order_Date', 'Country', 'Region', 'Product', 'Category',\n       'Quantity', 'Unit_Price', 'Unit_Cost', 'Revenue', 'Cost'],\n      dtype='str')"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 5
+    },
+    {
+      "id": "cef9c98f-5ad7-4cc6-82fe-386ce5b8cddf",
+      "cell_type": "code",
+      "source": "df['Country']=df['Country'].replace('USA','America')",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": 24
+    },
+    {
+      "id": "0870ac37-f4d1-4948-b207-751c8c72dbb8",
+      "cell_type": "code",
+      "source": "df",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 6,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "      Order_Id  Order_Date      Country               Region     Product  \\\n0       102707  2025-01-01      Germany               Europe     Monitor   \n1       104038  2025-01-01       Mexico        North America     Monitor   \n2       103153  2025-01-01          USA        North America      Tablet   \n3       103617  2025-01-01  South Korea                 Asia  Smartwatch   \n4       102562  2025-01-01       Mexico        North America  Smartwatch   \n...        ...         ...          ...                  ...         ...   \n4995    102879  2026-06-30  South Korea                 Asia  Smartwatch   \n4996    104162  2026-06-30           UK               Europe     Monitor   \n4997    100980  2026-06-30    Singapore                 Asia  Headphones   \n4998    101426  2026-06-30  New Zealand  Australia & Oceania  Smartwatch   \n4999    100530  2026-06-30    Australia  Australia & Oceania      Tablet   \n\n         Category  Quantity  Unit_Price  Unit_Cost  Revenue     Cost  \n0     Electronics        14      322.82     234.87  4519.48  3288.18  \n1     Electronics        14      358.28     230.71  5015.92  3229.94  \n2     Electronics        15      405.59     290.24  6083.85  4353.60  \n3       Wearables        11      223.53     127.81  2458.83  1405.91  \n4       Wearables         3      201.58     139.86   604.74   419.58  \n...           ...       ...         ...        ...      ...      ...  \n4995    Wearables         9      222.99     138.48  2006.91  1246.32  \n4996  Electronics         9      353.98     240.49  3185.82  2164.41  \n4997  Accessories         1      109.94      66.30   109.94    66.30  \n4998    Wearables        14      204.15     132.73  2858.10  1858.22  \n4999  Electronics         8      461.86     304.26  3694.88  2434.08  \n\n[5000 rows x 11 columns]",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Order_Id</th>\n      <th>Order_Date</th>\n      <th>Country</th>\n      <th>Region</th>\n      <th>Product</th>\n      <th>Category</th>\n      <th>Quantity</th>\n      <th>Unit_Price</th>\n      <th>Unit_Cost</th>\n      <th>Revenue</th>\n      <th>Cost</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>102707</td>\n      <td>2025-01-01</td>\n      <td>Germany</td>\n      <td>Europe</td>\n      <td>Monitor</td>\n      <td>Electronics</td>\n      <td>14</td>\n      <td>322.82</td>\n      <td>234.87</td>\n      <td>4519.48</td>\n      <td>3288.18</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>104038</td>\n      <td>2025-01-01</td>\n      <td>Mexico</td>\n      <td>North America</td>\n      <td>Monitor</td>\n      <td>Electronics</td>\n      <td>14</td>\n      <td>358.28</td>\n      <td>230.71</td>\n      <td>5015.92</td>\n      <td>3229.94</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>103153</td>\n      <td>2025-01-01</td>\n      <td>USA</td>\n      <td>North America</td>\n      <td>Tablet</td>\n      <td>Electronics</td>\n      <td>15</td>\n      <td>405.59</td>\n      <td>290.24</td>\n      <td>6083.85</td>\n      <td>4353.60</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>103617</td>\n      <td>2025-01-01</td>\n      <td>South Korea</td>\n      <td>Asia</td>\n      <td>Smartwatch</td>\n      <td>Wearables</td>\n      <td>11</td>\n      <td>223.53</td>\n      <td>127.81</td>\n      <td>2458.83</td>\n      <td>1405.91</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>102562</td>\n      <td>2025-01-01</td>\n      <td>Mexico</td>\n      <td>North America</td>\n      <td>Smartwatch</td>\n      <td>Wearables</td>\n      <td>3</td>\n      <td>201.58</td>\n      <td>139.86</td>\n      <td>604.74</td>\n      <td>419.58</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>4995</th>\n      <td>102879</td>\n      <td>2026-06-30</td>\n      <td>South Korea</td>\n      <td>Asia</td>\n      <td>Smartwatch</td>\n      <td>Wearables</td>\n      <td>9</td>\n      <td>222.99</td>\n      <td>138.48</td>\n      <td>2006.91</td>\n      <td>1246.32</td>\n    </tr>\n    <tr>\n      <th>4996</th>\n      <td>104162</td>\n      <td>2026-06-30</td>\n      <td>UK</td>\n      <td>Europe</td>\n      <td>Monitor</td>\n      <td>Electronics</td>\n      <td>9</td>\n      <td>353.98</td>\n      <td>240.49</td>\n      <td>3185.82</td>\n      <td>2164.41</td>\n    </tr>\n    <tr>\n      <th>4997</th>\n      <td>100980</td>\n      <td>2026-06-30</td>\n      <td>Singapore</td>\n      <td>Asia</td>\n      <td>Headphones</td>\n      <td>Accessories</td>\n      <td>1</td>\n      <td>109.94</td>\n      <td>66.30</td>\n      <td>109.94</td>\n      <td>66.30</td>\n    </tr>\n    <tr>\n      <th>4998</th>\n      <td>101426</td>\n      <td>2026-06-30</td>\n      <td>New Zealand</td>\n      <td>Australia &amp; Oceania</td>\n      <td>Smartwatch</td>\n      <td>Wearables</td>\n      <td>14</td>\n      <td>204.15</td>\n      <td>132.73</td>\n      <td>2858.10</td>\n      <td>1858.22</td>\n    </tr>\n    <tr>\n      <th>4999</th>\n      <td>100530</td>\n      <td>2026-06-30</td>\n      <td>Australia</td>\n      <td>Australia &amp; Oceania</td>\n      <td>Tablet</td>\n      <td>Electronics</td>\n      <td>8</td>\n      <td>461.86</td>\n      <td>304.26</td>\n      <td>3694.88</td>\n      <td>2434.08</td>\n    </tr>\n  </tbody>\n</table>\n<p>5000 rows × 11 columns</p>\n</div>"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 6
+    },
+    {
+      "id": "b10fa691-6f71-498c-8536-93b3d83aeba3",
+      "cell_type": "code",
+      "source": "df['Total_Cost'].sum()",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 26,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "np.float64(9152014.19)"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 26
+    },
+    {
+      "id": "88083335-1732-4401-970f-143888449d99",
+      "cell_type": "code",
+      "source": "df['Order_Date']=pd.to_datetime(df['Order_Date'])\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": 79
+    },
+    {
+      "id": "15f4b9be-b712-4a65-944e-da2eb645b5c9",
+      "cell_type": "code",
+      "source": "df['Order_Date'].dtype",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 80,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "dtype('<M8[us]')"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 80
+    },
+    {
+      "id": "76b67065-c6d0-4f2c-963a-70aee0e5e2a5",
+      "cell_type": "code",
+      "source": "pivot=df.pivot_table(\n    index='Country',\n    values='Quantity',\n    columns ='Category',\n      aggfunc= 'count'\n  \n)",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": 59
+    },
+    {
+      "id": "9ac4badd-edec-436a-92d3-00fdda7baf46",
+      "cell_type": "code",
+      "source": "pivot",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 60,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "Category     Accessories  Electronics  Wearables\nCountry                                         \nAmerica              165          230         61\nAustralia            142          171         53\nCanada               152          206         56\nFrance               103          151         43\nGermany              108          128         42\nIndia                111          118         41\nItaly                 94          115         31\nJapan                108          130         42\nMexico               160          186         55\nNetherlands           96          140         29\nNew Zealand          139          177         48\nSingapore            113          141         38\nSouth Korea           90          120         37\nSpain                102          155         32\nUAE                  121          132         37\nUK                    96          134         21",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th>Category</th>\n      <th>Accessories</th>\n      <th>Electronics</th>\n      <th>Wearables</th>\n    </tr>\n    <tr>\n      <th>Country</th>\n      <th></th>\n      <th></th>\n      <th></th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>America</th>\n      <td>165</td>\n      <td>230</td>\n      <td>61</td>\n    </tr>\n    <tr>\n      <th>Australia</th>\n      <td>142</td>\n      <td>171</td>\n      <td>53</td>\n    </tr>\n    <tr>\n      <th>Canada</th>\n      <td>152</td>\n      <td>206</td>\n      <td>56</td>\n    </tr>\n    <tr>\n      <th>France</th>\n      <td>103</td>\n      <td>151</td>\n      <td>43</td>\n    </tr>\n    <tr>\n      <th>Germany</th>\n      <td>108</td>\n      <td>128</td>\n      <td>42</td>\n    </tr>\n    <tr>\n      <th>India</th>\n      <td>111</td>\n      <td>118</td>\n      <td>41</td>\n    </tr>\n    <tr>\n      <th>Italy</th>\n      <td>94</td>\n      <td>115</td>\n      <td>31</td>\n    </tr>\n    <tr>\n      <th>Japan</th>\n      <td>108</td>\n      <td>130</td>\n      <td>42</td>\n    </tr>\n    <tr>\n      <th>Mexico</th>\n      <td>160</td>\n      <td>186</td>\n      <td>55</td>\n    </tr>\n    <tr>\n      <th>Netherlands</th>\n      <td>96</td>\n      <td>140</td>\n      <td>29</td>\n    </tr>\n    <tr>\n      <th>New Zealand</th>\n      <td>139</td>\n      <td>177</td>\n      <td>48</td>\n    </tr>\n    <tr>\n      <th>Singapore</th>\n      <td>113</td>\n      <td>141</td>\n      <td>38</td>\n    </tr>\n    <tr>\n      <th>South Korea</th>\n      <td>90</td>\n      <td>120</td>\n      <td>37</td>\n    </tr>\n    <tr>\n      <th>Spain</th>\n      <td>102</td>\n      <td>155</td>\n      <td>32</td>\n    </tr>\n    <tr>\n      <th>UAE</th>\n      <td>121</td>\n      <td>132</td>\n      <td>37</td>\n    </tr>\n    <tr>\n      <th>UK</th>\n      <td>96</td>\n      <td>134</td>\n      <td>21</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 60
+    },
+    {
+      "id": "2bf1d431-6ab4-4eae-abc8-f17e1dd6858b",
+      "cell_type": "code",
+      "source": "df1 = pd.DataFrame({\n    'Order_Id':[102707,104038,103153,103617,102562,23445],\n    'Cust_name':['raavi','Naagi','reddy','kandula','kandd','tyyy'],\n    'ship_name':['Abc','Bca','CDa','naa','Abc','poo']})",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": 15
+    },
+    {
+      "id": "6b3f22ec-8a1f-42c3-abfe-f8f9b09ed800",
+      "cell_type": "code",
+      "source": "df1",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 16,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "   Order_Id Cust_name ship_name\n0    102707     raavi       Abc\n1    104038     Naagi       Bca\n2    103153     reddy       CDa\n3    103617   kandula       naa\n4    102562     kandd       Abc\n5     23445      tyyy       poo",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Order_Id</th>\n      <th>Cust_name</th>\n      <th>ship_name</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>102707</td>\n      <td>raavi</td>\n      <td>Abc</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>104038</td>\n      <td>Naagi</td>\n      <td>Bca</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>103153</td>\n      <td>reddy</td>\n      <td>CDa</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>103617</td>\n      <td>kandula</td>\n      <td>naa</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>102562</td>\n      <td>kandd</td>\n      <td>Abc</td>\n    </tr>\n    <tr>\n      <th>5</th>\n      <td>23445</td>\n      <td>tyyy</td>\n      <td>poo</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 16
+    },
+    {
+      "id": "a40903e8-f95d-495c-960e-632920c7dc52",
+      "cell_type": "code",
+      "source": "merge = pd.merge(df,df1,on='Order_Id',how='outer')",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": 31
+    },
+    {
+      "id": "e18f8891-5490-4b7f-83c3-77dc15b16956",
+      "cell_type": "code",
+      "source": "merge",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 32,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "      Order_Id  Order_Date      Country               Region     Product  \\\n0        23445         NaN          NaN                  NaN         NaN   \n1       100001  2026-02-26    Singapore                 Asia     Monitor   \n2       100002  2025-03-21  New Zealand  Australia & Oceania  Headphones   \n3       100003  2025-07-05       Mexico        North America    Keyboard   \n4       100004  2025-01-05    Singapore                 Asia  Smartwatch   \n...        ...         ...          ...                  ...         ...   \n4996    104996  2025-12-23    Australia  Australia & Oceania       Mouse   \n4997    104997  2026-05-14      Germany               Europe       Phone   \n4998    104998  2026-03-11  South Korea                 Asia       Phone   \n4999    104999  2025-04-29       Mexico        North America       Phone   \n5000    105000  2025-02-16        Japan                 Asia       Mouse   \n\n         Category  Quantity  Unit_Price  Unit_Cost  Revenue     Cost  \\\n0             NaN       NaN         NaN        NaN      NaN      NaN   \n1     Electronics      14.0      386.61     241.01  5412.54  3374.14   \n2     Accessories      15.0      122.57      69.37  1838.55  1040.55   \n3     Accessories       2.0       75.26      38.33   150.52    76.66   \n4       Wearables      13.0      214.10     129.22  2783.30  1679.86   \n...           ...       ...         ...        ...      ...      ...   \n4996  Accessories       8.0       47.24      24.10   377.92   192.80   \n4997  Electronics      11.0      638.29     464.20  7021.19  5106.20   \n4998  Electronics       4.0      689.86     451.95  2759.44  1807.80   \n4999  Electronics       2.0      642.98     454.66  1285.96   909.32   \n5000  Accessories      14.0       46.71      21.75   653.94   304.50   \n\n     Cust_name ship_name  \n0         tyyy       poo  \n1          NaN       NaN  \n2          NaN       NaN  \n3          NaN       NaN  \n4          NaN       NaN  \n...        ...       ...  \n4996       NaN       NaN  \n4997       NaN       NaN  \n4998       NaN       NaN  \n4999       NaN       NaN  \n5000       NaN       NaN  \n\n[5001 rows x 13 columns]",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Order_Id</th>\n      <th>Order_Date</th>\n      <th>Country</th>\n      <th>Region</th>\n      <th>Product</th>\n      <th>Category</th>\n      <th>Quantity</th>\n      <th>Unit_Price</th>\n      <th>Unit_Cost</th>\n      <th>Revenue</th>\n      <th>Cost</th>\n      <th>Cust_name</th>\n      <th>ship_name</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>23445</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>tyyy</td>\n      <td>poo</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>100001</td>\n      <td>2026-02-26</td>\n      <td>Singapore</td>\n      <td>Asia</td>\n      <td>Monitor</td>\n      <td>Electronics</td>\n      <td>14.0</td>\n      <td>386.61</td>\n      <td>241.01</td>\n      <td>5412.54</td>\n      <td>3374.14</td>\n      <td>NaN</td>\n      <td>NaN</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>100002</td>\n      <td>2025-03-21</td>\n      <td>New Zealand</td>\n      <td>Australia &amp; Oceania</td>\n      <td>Headphones</td>\n      <td>Accessories</td>\n      <td>15.0</td>\n      <td>122.57</td>\n      <td>69.37</td>\n      <td>1838.55</td>\n      <td>1040.55</td>\n      <td>NaN</td>\n      <td>NaN</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>100003</td>\n      <td>2025-07-05</td>\n      <td>Mexico</td>\n      <td>North America</td>\n      <td>Keyboard</td>\n      <td>Accessories</td>\n      <td>2.0</td>\n      <td>75.26</td>\n      <td>38.33</td>\n      <td>150.52</td>\n      <td>76.66</td>\n      <td>NaN</td>\n      <td>NaN</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>100004</td>\n      <td>2025-01-05</td>\n      <td>Singapore</td>\n      <td>Asia</td>\n      <td>Smartwatch</td>\n      <td>Wearables</td>\n      <td>13.0</td>\n      <td>214.10</td>\n      <td>129.22</td>\n      <td>2783.30</td>\n      <td>1679.86</td>\n      <td>NaN</td>\n      <td>NaN</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>4996</th>\n      <td>104996</td>\n      <td>2025-12-23</td>\n      <td>Australia</td>\n      <td>Australia &amp; Oceania</td>\n      <td>Mouse</td>\n      <td>Accessories</td>\n      <td>8.0</td>\n      <td>47.24</td>\n      <td>24.10</td>\n      <td>377.92</td>\n      <td>192.80</td>\n      <td>NaN</td>\n      <td>NaN</td>\n    </tr>\n    <tr>\n      <th>4997</th>\n      <td>104997</td>\n      <td>2026-05-14</td>\n      <td>Germany</td>\n      <td>Europe</td>\n      <td>Phone</td>\n      <td>Electronics</td>\n      <td>11.0</td>\n      <td>638.29</td>\n      <td>464.20</td>\n      <td>7021.19</td>\n      <td>5106.20</td>\n      <td>NaN</td>\n      <td>NaN</td>\n    </tr>\n    <tr>\n      <th>4998</th>\n      <td>104998</td>\n      <td>2026-03-11</td>\n      <td>South Korea</td>\n      <td>Asia</td>\n      <td>Phone</td>\n      <td>Electronics</td>\n      <td>4.0</td>\n      <td>689.86</td>\n      <td>451.95</td>\n      <td>2759.44</td>\n      <td>1807.80</td>\n      <td>NaN</td>\n      <td>NaN</td>\n    </tr>\n    <tr>\n      <th>4999</th>\n      <td>104999</td>\n      <td>2025-04-29</td>\n      <td>Mexico</td>\n      <td>North America</td>\n      <td>Phone</td>\n      <td>Electronics</td>\n      <td>2.0</td>\n      <td>642.98</td>\n      <td>454.66</td>\n      <td>1285.96</td>\n      <td>909.32</td>\n      <td>NaN</td>\n      <td>NaN</td>\n    </tr>\n    <tr>\n      <th>5000</th>\n      <td>105000</td>\n      <td>2025-02-16</td>\n      <td>Japan</td>\n      <td>Asia</td>\n      <td>Mouse</td>\n      <td>Accessories</td>\n      <td>14.0</td>\n      <td>46.71</td>\n      <td>21.75</td>\n      <td>653.94</td>\n      <td>304.50</td>\n      <td>NaN</td>\n      <td>NaN</td>\n    </tr>\n  </tbody>\n</table>\n<p>5001 rows × 13 columns</p>\n</div>"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 32
+    },
+    {
+      "id": "de8217be-1525-46a2-a56b-75cdc769024d",
+      "cell_type": "code",
+      "source": "append = pd.concat([df,df1])",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": 35
+    },
+    {
+      "id": "52d58991-599e-47df-9c00-c85159b34af9",
+      "cell_type": "code",
+      "source": "append",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 36,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "    Order_Id  Order_Date      Country         Region     Product     Category  \\\n0     102707  2025-01-01      Germany         Europe     Monitor  Electronics   \n1     104038  2025-01-01       Mexico  North America     Monitor  Electronics   \n2     103153  2025-01-01          USA  North America      Tablet  Electronics   \n3     103617  2025-01-01  South Korea           Asia  Smartwatch    Wearables   \n4     102562  2025-01-01       Mexico  North America  Smartwatch    Wearables   \n..       ...         ...          ...            ...         ...          ...   \n1     104038         NaN          NaN            NaN         NaN          NaN   \n2     103153         NaN          NaN            NaN         NaN          NaN   \n3     103617         NaN          NaN            NaN         NaN          NaN   \n4     102562         NaN          NaN            NaN         NaN          NaN   \n5      23445         NaN          NaN            NaN         NaN          NaN   \n\n    Quantity  Unit_Price  Unit_Cost  Revenue     Cost Cust_name ship_name  \n0       14.0      322.82     234.87  4519.48  3288.18       NaN       NaN  \n1       14.0      358.28     230.71  5015.92  3229.94       NaN       NaN  \n2       15.0      405.59     290.24  6083.85  4353.60       NaN       NaN  \n3       11.0      223.53     127.81  2458.83  1405.91       NaN       NaN  \n4        3.0      201.58     139.86   604.74   419.58       NaN       NaN  \n..       ...         ...        ...      ...      ...       ...       ...  \n1        NaN         NaN        NaN      NaN      NaN     Naagi       Bca  \n2        NaN         NaN        NaN      NaN      NaN     reddy       CDa  \n3        NaN         NaN        NaN      NaN      NaN   kandula       naa  \n4        NaN         NaN        NaN      NaN      NaN     kandd       Abc  \n5        NaN         NaN        NaN      NaN      NaN      tyyy       poo  \n\n[5006 rows x 13 columns]",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Order_Id</th>\n      <th>Order_Date</th>\n      <th>Country</th>\n      <th>Region</th>\n      <th>Product</th>\n      <th>Category</th>\n      <th>Quantity</th>\n      <th>Unit_Price</th>\n      <th>Unit_Cost</th>\n      <th>Revenue</th>\n      <th>Cost</th>\n      <th>Cust_name</th>\n      <th>ship_name</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>102707</td>\n      <td>2025-01-01</td>\n      <td>Germany</td>\n      <td>Europe</td>\n      <td>Monitor</td>\n      <td>Electronics</td>\n      <td>14.0</td>\n      <td>322.82</td>\n      <td>234.87</td>\n      <td>4519.48</td>\n      <td>3288.18</td>\n      <td>NaN</td>\n      <td>NaN</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>104038</td>\n      <td>2025-01-01</td>\n      <td>Mexico</td>\n      <td>North America</td>\n      <td>Monitor</td>\n      <td>Electronics</td>\n      <td>14.0</td>\n      <td>358.28</td>\n      <td>230.71</td>\n      <td>5015.92</td>\n      <td>3229.94</td>\n      <td>NaN</td>\n      <td>NaN</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>103153</td>\n      <td>2025-01-01</td>\n      <td>USA</td>\n      <td>North America</td>\n      <td>Tablet</td>\n      <td>Electronics</td>\n      <td>15.0</td>\n      <td>405.59</td>\n      <td>290.24</td>\n      <td>6083.85</td>\n      <td>4353.60</td>\n      <td>NaN</td>\n      <td>NaN</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>103617</td>\n      <td>2025-01-01</td>\n      <td>South Korea</td>\n      <td>Asia</td>\n      <td>Smartwatch</td>\n      <td>Wearables</td>\n      <td>11.0</td>\n      <td>223.53</td>\n      <td>127.81</td>\n      <td>2458.83</td>\n      <td>1405.91</td>\n      <td>NaN</td>\n      <td>NaN</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>102562</td>\n      <td>2025-01-01</td>\n      <td>Mexico</td>\n      <td>North America</td>\n      <td>Smartwatch</td>\n      <td>Wearables</td>\n      <td>3.0</td>\n      <td>201.58</td>\n      <td>139.86</td>\n      <td>604.74</td>\n      <td>419.58</td>\n      <td>NaN</td>\n      <td>NaN</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>104038</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>Naagi</td>\n      <td>Bca</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>103153</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>reddy</td>\n      <td>CDa</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>103617</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>kandula</td>\n      <td>naa</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>102562</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>kandd</td>\n      <td>Abc</td>\n    </tr>\n    <tr>\n      <th>5</th>\n      <td>23445</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>NaN</td>\n      <td>tyyy</td>\n      <td>poo</td>\n    </tr>\n  </tbody>\n</table>\n<p>5006 rows × 13 columns</p>\n</div>"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 36
+    },
+    {
+      "id": "74ccdc3d-ec12-4069-aad4-4383e24c02a4",
+      "cell_type": "markdown",
+      "source": "## 1.Total Revenue",
+      "metadata": {}
+    },
+    {
+      "id": "00f54d35-e927-4571-80db-7f2bb0794d7f",
+      "cell_type": "code",
+      "source": "total_revenue = df['Revenue'].sum()\ntotal_revenue",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 39,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "np.float64(13729236.239999998)"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 39
+    },
+    {
+      "id": "f0e7e4f0-b55e-40ae-ad19-3c9dcfb65272",
+      "cell_type": "markdown",
+      "source": "## 2.Total Cost",
+      "metadata": {}
+    },
+    {
+      "id": "044834eb-4865-4651-91be-b540dfb4d154",
+      "cell_type": "code",
+      "source": "Total_Cost = df['Cost'].sum()\nTotal_Cost",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 40,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "np.float64(9152014.19)"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 40
+    },
+    {
+      "id": "ba89c1d6-d079-446e-a362-57f339e5f61b",
+      "cell_type": "markdown",
+      "source": "## 3.What is our total profit?",
+      "metadata": {}
+    },
+    {
+      "id": "19e9d9a8-8d55-4688-9acd-b53897b4a82f",
+      "cell_type": "code",
+      "source": "Total_Profit = df['Revenue']-df[\"Cost\"]\nTotal_Profit.sum()",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 49,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "np.float64(4577222.05)"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 49
+    },
+    {
+      "id": "bc220993-71c2-4360-87df-e9358eaf0639",
+      "cell_type": "markdown",
+      "source": "## 4.How many orders did we receive?",
+      "metadata": {}
+    },
+    {
+      "id": "c16e9ee3-c25a-42fe-8841-0386393d814a",
+      "cell_type": "code",
+      "source": "Total_Orders= df['Order_Id'].count()\nTotal_Orders",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 51,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "np.int64(5000)"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 51
+    },
+    {
+      "id": "7523e1e6-c300-4ab0-9f0c-5847ba7882fd",
+      "cell_type": "markdown",
+      "source": "## 5.How many products did we sell?",
+      "metadata": {}
+    },
+    {
+      "id": "00ab4db8-082a-45dc-a36f-7c8978b19c50",
+      "cell_type": "code",
+      "source": "Total_selling_Products = df['Quantity'].sum()\nTotal_selling_Products ",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 53,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "np.int64(39868)"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 53
+    },
+    {
+      "id": "724964ae-ade1-427d-a2f8-1e6dde854697",
+      "cell_type": "markdown",
+      "source": "## 6.Which country generated the highest revenue?",
+      "metadata": {}
+    },
+    {
+      "id": "affb99c5-4fd0-4562-971f-010d811db228",
+      "cell_type": "code",
+      "source": "high_gen_country = df.groupby('Country')['Revenue'].sum().sort_values(ascending=False).head(1)\nhigh_gen_country",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 61,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "Country\nUSA    1281182.74\nName: Revenue, dtype: float64"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 61
+    },
+    {
+      "id": "551df8a2-cdcb-4bfc-9c3b-ce2c7cfea432",
+      "cell_type": "markdown",
+      "source": "## 7 Which region generated the highest revenue?",
+      "metadata": {}
+    },
+    {
+      "id": "064dd92e-b69c-4d37-8711-60fe8424b335",
+      "cell_type": "code",
+      "source": "high_gen_region = df.groupby('Region')['Revenue'].sum().sort_values(ascending=False).head(1)\nhigh_gen_region",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 62,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "Region\nEurope    4811282.42\nName: Revenue, dtype: float64"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 62
+    },
+    {
+      "id": "dff702cb-26e8-4ec8-8e1d-580061bd0d2b",
+      "cell_type": "markdown",
+      "source": "## 8.Which product generated the highest revenue?",
+      "metadata": {}
+    },
+    {
+      "id": "4f76e781-2e59-4879-94db-4f4394ae5c2e",
+      "cell_type": "code",
+      "source": "high_product_rev =df.groupby('Product')['Revenue'].sum().sort_values(ascending=False).head(1)\nhigh_product_rev",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 64,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "Product\nLaptop    4355105.43\nName: Revenue, dtype: float64"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 64
+    },
+    {
+      "id": "1b8e597f-8800-4b25-b717-7a3722e8d310",
+      "cell_type": "markdown",
+      "source": "## 9.Which category generated the highest revenue?",
+      "metadata": {}
+    },
+    {
+      "id": "1872e6a6-c9d3-401f-919d-581fa0134645",
+      "cell_type": "code",
+      "source": "high_Category_rev =df.groupby('Category')['Revenue'].sum().sort_values(ascending=False).head(1)\nhigh_Category_rev",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 66,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "Category\nElectronics    11330540.13\nName: Revenue, dtype: float64"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 66
+    },
+    {
+      "id": "7244b3fa-b4c3-4d84-bfaf-965edc52aba4",
+      "cell_type": "markdown",
+      "source": "## !0.What is our overall profit margin?",
+      "metadata": {}
+    },
+    {
+      "id": "9a06c0da-b01e-4037-a3cd-44bd9510dec5",
+      "cell_type": "code",
+      "source": "df['Profit']=df['Revenue']-df['Cost']\ndf['Profit']",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 69,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "0       1231.30\n1       1785.98\n2       1730.25\n3       1052.92\n4        185.16\n         ...   \n4995     760.59\n4996    1021.41\n4997      43.64\n4998     999.88\n4999    1260.80\nName: Profit, Length: 5000, dtype: float64"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 69
+    },
+    {
+      "id": "ed5b0368-4636-4bfb-8677-824186b867cb",
+      "cell_type": "code",
+      "source": "Profit_Margin = (df['Profit']/df['Revenue'])*100\nProfit_Margin",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 72,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "0       27.244285\n1       35.606230\n2       28.440050\n3       42.821993\n4       30.618117\n          ...    \n4995    37.898560\n4996    32.061133\n4997    39.694379\n4998    34.984080\n4999    34.122894\nLength: 5000, dtype: float64"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 72
+    },
+    {
+      "id": "2c82cee9-45b1-4c9b-8af4-344537ce876a",
+      "cell_type": "markdown",
+      "source": "# 11 How did revenue change month over month?",
+      "metadata": {}
+    },
+    {
+      "id": "32158ecb-ad9c-404f-bf63-4a2b10a8ae9e",
+      "cell_type": "code",
+      "source": "monthly_revenue = df.groupby(df['Order_Date'].dt.to_period(\"M\"))['Revenue'].sum()\nmonthly_revenue",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 82,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "Order_Date\n2025-01    844156.11\n2025-02    763024.65\n2025-03    788969.01\n2025-04    816628.52\n2025-05    668423.99\n2025-06    825051.50\n2025-07    738887.01\n2025-08    799602.98\n2025-09    762687.45\n2025-10    680438.16\n2025-11    639304.32\n2025-12    864606.93\n2026-01    631124.90\n2026-02    704339.76\n2026-03    719135.34\n2026-04    749977.13\n2026-05    865533.90\n2026-06    867344.58\nFreq: M, Name: Revenue, dtype: float64"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 82
+    },
+    {
+      "id": "3f8b652e-f935-480f-80e2-d383cf71488e",
+      "cell_type": "code",
+      "source": "mom_change= monthly_revenue.pct_change()*100\nmom_change",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 85,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "Order_Date\n2025-01          NaN\n2025-02    -9.610955\n2025-03     3.400199\n2025-04     3.505779\n2025-05   -18.148341\n2025-06    23.432359\n2025-07   -10.443529\n2025-08     8.217220\n2025-09    -4.616732\n2025-10   -10.784141\n2025-11    -6.045199\n2025-12    35.241841\n2026-01   -27.004413\n2026-02    11.600693\n2026-03     2.100631\n2026-04     4.288732\n2026-05    15.408039\n2026-06     0.209198\nFreq: M, Name: Revenue, dtype: float64"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 85
+    },
+    {
+      "id": "c6927e95-88c0-463c-a957-8928e9ce63c7",
+      "cell_type": "code",
+      "source": "result = pd.DataFrame({\n    'Revenue':monthly_revenue,\n    'Mom_change_%':mom_change})",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": 87
+    },
+    {
+      "id": "6b46c4f6-ca27-4379-ae78-22593a849516",
+      "cell_type": "code",
+      "source": "result",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "execution_count": 88,
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": "              Revenue  Mom_change_%\nOrder_Date                         \n2025-01     844156.11           NaN\n2025-02     763024.65     -9.610955\n2025-03     788969.01      3.400199\n2025-04     816628.52      3.505779\n2025-05     668423.99    -18.148341\n2025-06     825051.50     23.432359\n2025-07     738887.01    -10.443529\n2025-08     799602.98      8.217220\n2025-09     762687.45     -4.616732\n2025-10     680438.16    -10.784141\n2025-11     639304.32     -6.045199\n2025-12     864606.93     35.241841\n2026-01     631124.90    -27.004413\n2026-02     704339.76     11.600693\n2026-03     719135.34      2.100631\n2026-04     749977.13      4.288732\n2026-05     865533.90     15.408039\n2026-06     867344.58      0.209198",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Revenue</th>\n      <th>Mom_change_%</th>\n    </tr>\n    <tr>\n      <th>Order_Date</th>\n      <th></th>\n      <th></th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>2025-01</th>\n      <td>844156.11</td>\n      <td>NaN</td>\n    </tr>\n    <tr>\n      <th>2025-02</th>\n      <td>763024.65</td>\n      <td>-9.610955</td>\n    </tr>\n    <tr>\n      <th>2025-03</th>\n      <td>788969.01</td>\n      <td>3.400199</td>\n    </tr>\n    <tr>\n      <th>2025-04</th>\n      <td>816628.52</td>\n      <td>3.505779</td>\n    </tr>\n    <tr>\n      <th>2025-05</th>\n      <td>668423.99</td>\n      <td>-18.148341</td>\n    </tr>\n    <tr>\n      <th>2025-06</th>\n      <td>825051.50</td>\n      <td>23.432359</td>\n    </tr>\n    <tr>\n      <th>2025-07</th>\n      <td>738887.01</td>\n      <td>-10.443529</td>\n    </tr>\n    <tr>\n      <th>2025-08</th>\n      <td>799602.98</td>\n      <td>8.217220</td>\n    </tr>\n    <tr>\n      <th>2025-09</th>\n      <td>762687.45</td>\n      <td>-4.616732</td>\n    </tr>\n    <tr>\n      <th>2025-10</th>\n      <td>680438.16</td>\n      <td>-10.784141</td>\n    </tr>\n    <tr>\n      <th>2025-11</th>\n      <td>639304.32</td>\n      <td>-6.045199</td>\n    </tr>\n    <tr>\n      <th>2025-12</th>\n      <td>864606.93</td>\n      <td>35.241841</td>\n    </tr>\n    <tr>\n      <th>2026-01</th>\n      <td>631124.90</td>\n      <td>-27.004413</td>\n    </tr>\n    <tr>\n      <th>2026-02</th>\n      <td>704339.76</td>\n      <td>11.600693</td>\n    </tr>\n    <tr>\n      <th>2026-03</th>\n      <td>719135.34</td>\n      <td>2.100631</td>\n    </tr>\n    <tr>\n      <th>2026-04</th>\n      <td>749977.13</td>\n      <td>4.288732</td>\n    </tr>\n    <tr>\n      <th>2026-05</th>\n      <td>865533.90</td>\n      <td>15.408039</td>\n    </tr>\n    <tr>\n      <th>2026-06</th>\n      <td>867344.58</td>\n      <td>0.209198</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 88
+    },
+    {
+      "id": "8fbd652d-a70e-49b9-9719-7c3059a381d2",
+      "cell_type": "code",
+      "source": "12.",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "id": "dbe5f21a-4c72-4b89-86db-51cf306adf2f",
+      "cell_type": "code",
+      "source": "df[\"Date\"] = pd.to_datetime(df[\"Date\"])\n\ndf[\"Period\"] = df[\"Date\"].dt.to_period(\"M\")\n\ncountry_monthly = df.groupby(\n    [\"Period\", \"Country\"]\n)[\"Revenue\"].sum().reset_index()\n\ncountry_growth = country_monthly.groupby(\"Country\")[\"Revenue\"].agg(\n    [\"first\", \"last\"]\n)\n\ncountry_growth[\"Growth\"] = (\n    country_growth[\"last\"] - country_growth[\"first\"]\n)\n\ncountry_growth.sort_values(\"Growth\", ascending=False)\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "id": "66fcd7fb-8b4b-4655-a532-d5f9b270aba2",
+      "cell_type": "code",
+      "source": "df.groupby(\"Region\")[\"Revenue\"].sum().sort_values(\n    ascending=False\n)\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "id": "8764034c-e4c8-4b20-b950-41425aa3ead9",
+      "cell_type": "code",
+      "source": "region_revenue = df.groupby(\"Region\")[\"Revenue\"].sum()\n\nregion_share = (\n    region_revenue / region_revenue.sum()\n) * 100\n\nprint(region_share.sort_values(ascending=False))\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "id": "3be9a9e9-adb6-413f-957b-701e49697b71",
+      "cell_type": "code",
+      "source": "14",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "id": "11344483-c13a-48ad-a6e6-761df588fce1",
+      "cell_type": "code",
+      "source": "product_revenue = df.groupby(\"Product\")[\"Revenue\"].sum().sort_values(\n    ascending=False\n)\n\nprint(product_revenue)\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "id": "fd9298a5-b3ef-4f4a-9abc-f178cd125b73",
+      "cell_type": "code",
+      "source": "product_revenue.head(5)\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "id": "546046b0-a52c-4de2-83d3-183333a3d126",
+      "cell_type": "code",
+      "source": "15",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "id": "6d9fd598-4d02-4324-afb8-2c85cbcbd6dd",
+      "cell_type": "code",
+      "source": "df[\"Date\"] = pd.to_datetime(df[\"Date\"])\n\nmonthly_product_sales = df.groupby(\n    [df[\"Date\"].dt.to_period(\"M\"), \"Product\"]\n)[\"Quantity\"].sum().reset_index()\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "id": "3d400e26-c7d3-448e-9a7d-d2fbdfdc10a9",
+      "cell_type": "code",
+      "source": "declining = monthly_product_sales.groupby(\"Product\")[\"Quantity\"].agg(\n    [\"first\", \"last\"]\n)\n\ndeclining[\"Change\"] = declining[\"last\"] - declining[\"first\"]\n\ndeclining.sort_values(\"Change\")\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    }
+  ]
+}
